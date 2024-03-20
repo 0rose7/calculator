@@ -18,8 +18,21 @@ public class CalculatorApplication {
 		SpringApplication.run(CalculatorApplication.class, args);
 		System.out.println("Woohoo pirmoji spring boot aplikacija");
 	}
+	// http://localhost:8080/hello?name=Andrius&surname=Nizevicius
+	// Metodo pavadinimas klaustukas (?) raktas, lygybe, reiksme, Optional jeigu daugiau &
 	@GetMapping("/hello")
-	public String hello(@RequestParam(value = "name" , defaultValue = "World") String name) {
-		return String.format("Hello %s!", name);
+	public String hello(@RequestParam(value = "name" , defaultValue = "World") String name, int age) {
+		return "Hello " + name + " metai: " + age;
 	}
+	@GetMapping("/index")
+	public String index() {
+		return "<h1>Internetinis Skaiciuotuvas. Atliks operacijas:</h1><br>" +
+		"&nbsp;&nbsp; Atimti<br>" +
+		"&nbsp;&nbsp; Dalinti<br>" +
+		"&nbsp;&nbsp; Sudeti<br>" +
+		"&nbsp;&nbsp; Dauginti<br>" +
+		"&nbsp;&nbsp; Atimti<br>";
+
+	}
+
 }
