@@ -1,7 +1,10 @@
 package com.spring.calculator;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
 
 // Web kontroleris leidzia viduje naudoti @RequestMapping.
 // @RestController anotacija nurodo , jog pvz: String tipo rezultatas turi buti ispaudinaas klientui toks koks yra
@@ -12,23 +15,29 @@ import org.springframework.web.bind.annotation.*;
 // Siuo atveju ji veikia kartu su main metodu.
 @EnableAutoConfiguration
 public class CalculatorController {
-    @RequestMapping(method = RequestMethod.GET, value = "/")
-    // http://localhost:8080/hello?name=Andrius&surname=Nizevicius
-    // Metodo pavadinimas klaustukas (?) raktas, lygybe, reiksme, Optional jeigu daugiau &
-    @GetMapping("/hello")
-    public String hello(@RequestParam(value = "name" , defaultValue = "World") String name, int age) {
-        return "Hello " + name + " metai: " + age;
+    @RequestMapping(method = RequestMethod.GET, value = "/skaiciuoti")
+    String hello() {
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+        HelloWorld bean = (HelloWorld) context.getBean("HelloWorld");
+        return bean.getHello();
     }
-    @GetMapping("/index")
-    public String index() {
-        return "<h1>Internetinis Skaiciuotuvas. Atliks operacijas:</h1><br>" +
-                "&nbsp;&nbsp; Atimti<br>" +
-                "&nbsp;&nbsp; Dalinti<br>" +
-                "&nbsp;&nbsp; Sudeti<br>" +
-                "&nbsp;&nbsp; Dauginti<br>" +
-                "&nbsp;&nbsp; Atimti<br>";
+    String skaiciuoti(@RequestParam HashMap<String, String> skaiciai) {
+        int sk1 = Integer.parseInt(skaiciai.get("sk1"));
+        int sk2 = Integer.parseInt(skaiciai.get("sk2"));
+        String zenklas = skaiciai.get("zenklas");
 
+        int rezultatas = 0;
+        if (zenklas.equals("+")) {
+            rezultatas = sk1 + sk2;
+        } else if (zenklas.equals("-")) {
+            rezultatas = sk1 - sk2;
+        } else if (zenklas.equals("*")) {
+            rezultatas = sk1 * sk2;
+        } else if (zenklas.equals("/")) {
+            rezultatas = sk1 / sk2;
+        }
+
+        return sk1 + zenklas + sk2 + " = " + rezultatas;
     }
-
 
 }
