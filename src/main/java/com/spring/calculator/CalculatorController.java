@@ -1,43 +1,62 @@
 package com.spring.calculator;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.HashMap;
 
 // Web kontroleris leidzia viduje naudoti @RequestMapping.
 // @RestController anotacija nurodo , jog pvz: String tipo rezultatas turi buti ispaudinaas klientui toks koks yra
-@RestController
+//@RestController
+
+//@RestController nergrazina view
+//Kadangi mums reikia grąžinti view pagal Spring MVC, naudojame @Controller
+@Controller
 // Zymi konfiguracijos komponenta viduje leidzia kurti bean per metodus su @Bean anotacija.
 // Si klases lygio anotacija nurodo spring karkasui "Atspeti" konfiguracija.
 // Rementis priklausomybemis ( Jar bibliotekomis ) kurios programuotojas itraukia i projekta ( Pom.xml
 // Siuo atveju ji veikia kartu su main metodu.
-@EnableAutoConfiguration
+//@EnableAutoConfiguration
 public class CalculatorController {
-    @RequestMapping(method = RequestMethod.GET, value = "/skaiciuoti")
-    String hello() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
-        HelloWorld bean = (HelloWorld) context.getBean("HelloWorld");
-        return bean.getHello();
+    // Marsrutizavimo informacija. šiuo atveju, ji nurodo Spring karkasui,
+    // jog visas HTTP užklausas, kurių kelias yra "/" apdoros metodas home().
+    @RequestMapping(method = RequestMethod.GET, value = "/")
+    public String home() {
+        // Grąžiname JSP failą, turi būti talpinami 'webapp -> WEB-INF -> jsp' aplanke
+        return "calculator";
     }
-    String skaiciuoti(@RequestParam HashMap<String, String> skaiciai) {
-        int sk1 = Integer.parseInt(skaiciai.get("sk1"));
-        int sk2 = Integer.parseInt(skaiciai.get("sk2"));
-        String zenklas = skaiciai.get("zenklas");
+    // kadangi skaiciuotuvo fomra naudoja POST metoda, cia irgi nurodome POST.
+    @RequestMapping(method = RequestMethod.POST, value = "/calculate")
+    String calculate(@RequestParam HashMap<String, String> numbers, ModelMap modelMap) {
+        int num1 = Integer.parseInt(numbers.get("num1"));
+        int num2 = Integer.parseInt(numbers.get("num2"));
+        String operation = numbers.get("operation");
+        double result = 0;
+        String error = "";
 
-        int rezultatas = 0;
-        if (zenklas.equals("+")) {
-            rezultatas = sk1 + sk2;
-        } else if (zenklas.equals("-")) {
-            rezultatas = sk1 - sk2;
-        } else if (zenklas.equals("*")) {
-            rezultatas = sk1 * sk2;
-        } else if (zenklas.equals("/")) {
-            rezultatas = sk1 / sk2;
+        if(operation.equals("+")) {
+            result = num1 + num2;
+        } else if(operation.equals("-")) {
+            result = num1 - num2;
+        } else if(operation.equals("*")) {
+            result = num1 * num2;
+        } else if(operation.equals("/")) {
+            if (num2 == 0) {
+                error = "Error! The number can not be divided by 0.";
+            } else
+                result = (double) num1 / num2;
         }
+        // ModelMap objektas naudojamas siųsti reikšmes iš Spring MVC controller į JSP
+        modelMap.put("num1", num1);
+        modelMap.put("num2", num2);
+        modelMap.put("operation", operation);
+        modelMap.put("result", result);
+        modelMap.put("error", error);
 
-        return sk1 + zenklas + sk2 + " = " + rezultatas;
+        return "calculate";
     }
-
 }

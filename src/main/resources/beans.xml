@@ -7,7 +7,7 @@
 
     <bean id="HelloWorld" class="com.spring.calculator.HelloWorld">
         <property name="hello"
-                  value="Internet calculator.The able aplications: Add up,Minus,Mulitply,Divide"/>
+                  value="Internet calculator.The able applications: Add up,Minus,Multiply,Divide"/>
     </bean>
 
 
