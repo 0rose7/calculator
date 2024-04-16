@@ -3,6 +3,7 @@
 <html lang="en">
     <head>
         <title>Skaičiuotuvas</title>
+        <jsp:include page="header.jsp"/>
         <style>
             .error{color:red}
         </style>
@@ -22,11 +23,8 @@
                     <option value="*">Daugyba</option>
                     <option value="/">Dalyba</option>
                 </select><p>
-                <input type="submit" value="calculate">
+                <input type="submit" value="skaiciuoti">
         </form>
         </form:form>
-    </body>
-</html>
-        </form>
     </body>
 </html>
