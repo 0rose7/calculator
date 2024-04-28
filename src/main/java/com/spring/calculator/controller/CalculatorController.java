@@ -45,8 +45,8 @@ public class CalculatorController {
     // trumpesnis POST variantas
     @PostMapping("/calculate")
     // naudotis @RequestParam reikia kai raktai skiriasi nuo frontend ir backend
-        String calculate(@Valid @ModelAttribute("number") Number e, BindingResult br,
-                         @RequestParam HashMap<String, String> numbers, ModelMap modelMap) {
+    String calculate(@Valid @ModelAttribute("number") Number e, BindingResult br,
+                     @RequestParam HashMap<String, String> numbers, ModelMap modelMap) {
         if(br.hasErrors()) {
             return "calculator";
         } else {
